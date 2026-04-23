@@ -1,18 +1,51 @@
-# design-deconstruct
+# claude-design-atomic-deconstruct
 
-Reverse-engineer a concept HTML file into a token-governed atomic design system with full artifact quartets (README + HTML + PDF + PNG) at every layer.
+Reverse-engineer a Claude Design exported HTML file into a token-governed atomic design system with full artifact quartets (README + HTML + PDF + PNG) at every layer.
+
+## Exporting from Claude Design
+
+This skill works with a **standalone HTML export** — not the "handoff to Claude Code" link. The handoff link just gives an agent a URL with no structure; the standalone HTML contains the actual design markup this skill decomposes.
+
+**To export:**
+
+1. In Claude Design, click the **Share** button (top right)
+2. Choose **Export as standalone HTML** (not "Share with Claude Code")
+
+   <img src="./assets/share.png" alt="Claude Design share menu showing Export as HTML option" width="400" />
+
+3. Save the file to your project — typically `.spec/design/concepts/<name>.html`
+
+## Why
+
+Claude Design produces beautiful, high-fidelity HTML — but asking an agent to *reproduce* that design is rough. The standard prompt is thin:
+
+> Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/...?open_file=example.html
+
+That's not enough context for an implementation agent. There are no tokens, no component boundaries, no variant inventory — just a monolithic HTML file.
+
+This skill bridges the gap. It takes a standalone exported HTML from Claude Design and decomposes it into a structured atomic design system — from semantic tokens and themes up through atoms, molecules, organisms, and full pages. Each layer gets a documented README, a multi-variant preview, and rendered artifacts. The result is a design system an implementation agent can actually work with.
 
 ## What it does
 
-Takes a single "concept" HTML file and decomposes it through five sequential phases into a reusable design system:
+This is an **iterative process**, not a one-shot command. Each time you export a concept from Claude Design, you run this skill against it. The system accumulates: tokens grow, new atoms and molecules are added, organisms and views are extended or updated. Re-running with an updated concept merges changes into the existing system rather than replacing it.
 
-1. **Tokens** — Semantic CSS custom properties, theme JSON files (light + dark), typography modules, and a primitives index page.
-2. **Atoms** — Indivisible components (buttons, inputs, tags, icons). Each gets its own folder with a recipe README and a multi-variant preview page.
+A single invocation decomposes a concept HTML through five sequential phases:
+
+1. **Tokens** — Semantic CSS custom properties, theme JSON files (light + dark), typography modules, and a primitives index page. On re-runs, new tokens are merged additively; existing tokens are preserved unless the concept changed them.
+2. **Atoms** — Indivisible components (buttons, inputs, tags, icons). Each gets its own folder with a recipe README and a multi-variant preview page. New atoms are added; existing atoms get new variants if the concept introduces them.
 3. **Molecules** — Compositions of 2+ atoms (search bars, card headers, form fields). Compose by class; never redefine atom styling.
 4. **Organisms** — Page-section units (nav, feed entries, footers). Compose from molecules + atoms.
 5. **Views** — Full pages built from organisms, with responsive breakpoints for desktop and mobile.
 
 Every artifact references theme tokens. Nothing hardcodes colors, spacing, or typography.
+
+### Iterative workflow
+
+1. Design a page in Claude Design, export the HTML
+2. Run `/design-deconstruct concept.html` to build the initial system
+3. Design another page or iterate on the same one, export again
+4. Run `/design-deconstruct updated-concept.html` — the skill detects existing output and merges
+5. Repeat until your design system covers all pages and states
 
 ## Usage
 
@@ -28,6 +61,8 @@ Every artifact references theme tokens. Nothing hardcodes colors, spacing, or ty
 | `--output <dir>` | Override output directory (default: `./.spec/design/system`) |
 | `--resume-from <phase>` | Resume from a specific phase (`tokens`, `atoms`, `molecules`, `organisms`, `views`) |
 | `--force` | Full regeneration; ignores existing output |
+
+When existing output is detected, the skill presents a phase selector — choose which layers to regenerate. Upward dependencies cascade automatically (e.g., regenerating atoms also queues molecules, organisms, and views). Phases you don't select are preserved as-is.
 
 ## Output structure
 
