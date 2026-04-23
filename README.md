@@ -131,12 +131,11 @@ Cascades are hard-capped at 3 layers of recursion with cycle detection.
 - **`frontend-design:frontend-design`** — provides per-phase aesthetic briefing that steers each component's distinctive look
 - **Headless Chrome** — required for PDF + PNG rendering (no fallback)
 
-## When to use
+## Limitations (by design)
 
-| Use this skill | Don't use it for |
-|---|---|
-| Decomposing an existing concept HTML into a design system | Creating new designs from scratch (use `/frontend-design:frontend-design`) |
-| Building a token-governed component library from a reference | Implementing components from specs (use `/pixel-perfect:build`) |
+This skill does **not** produce runnable application code. It produces an agent-readable design system — HTML previews, token CSS, PNG snapshots, and README recipes.
+
+The intended workflow is to point your planning and implementation agents at the output directory. They can read the PNG files as visual references, the HTML files as structural specs, and the README files as component recipes. This has produced high-fidelity implementations in practice — the design system gives agents enough structured context to reproduce the original concept faithfully.
 
 ## Documentation
 
@@ -150,4 +149,13 @@ Detailed docs are loaded on demand during execution:
 | `docs/RENDER-ARTIFACTS.md` | At component render time |
 | `docs/SEMANTIC-TOKENS.md` | By Phase 1 subagent |
 | `docs/OUTPUT-SCHEMA.md` | By Phase 1 subagent |
-# claude-design-atomic-deconstruct
+
+## Getting started
+
+1. Copy this entire `design-deconstruct` folder into your Claude Code skills directory:
+   ```
+   cp -r skills/design-deconstruct ~/.claude/skills/
+   ```
+2. That's it. Run `/design-deconstruct <path-to-concept.html>` in any project.
+
+To rename the skill, update the `name` field in `SKILL.md` and rename the folder to match. The slash command will use whatever name you choose (e.g., `/my-design-deconstruct`).
