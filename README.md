@@ -1,6 +1,16 @@
 # claude-design-atomic-deconstruct
 
-Reverse-engineer a Claude Design exported HTML file into a token-governed atomic design system with full artifact quartets (README + HTML + PDF + PNG) at every layer.
+Reverse-engineers a Claude Design exported HTML file into a token-governed atomic design system with full artifact quartets (README + HTML + PDF + PNG) at every layer.
+
+## Getting started
+
+1. Copy this entire `design-deconstruct` folder into your Claude Code skills directory:
+   ```
+   cp -r skills/design-deconstruct ~/.claude/skills/
+   ```
+2. That's it. Run `/design-deconstruct <path-to-concept.html>` in any project.
+
+To rename the skill, update the `name` field in `SKILL.md` and rename the folder to match. The slash command will use whatever name you choose (e.g., `/my-design-deconstruct`).
 
 ## Exporting from Claude Design
 
@@ -149,13 +159,3 @@ Detailed docs are loaded on demand during execution:
 | `docs/RENDER-ARTIFACTS.md` | At component render time |
 | `docs/SEMANTIC-TOKENS.md` | By Phase 1 subagent |
 | `docs/OUTPUT-SCHEMA.md` | By Phase 1 subagent |
-
-## Getting started
-
-1. Copy this entire `design-deconstruct` folder into your Claude Code skills directory:
-   ```
-   cp -r skills/design-deconstruct ~/.claude/skills/
-   ```
-2. That's it. Run `/design-deconstruct <path-to-concept.html>` in any project.
-
-To rename the skill, update the `name` field in `SKILL.md` and rename the folder to match. The slash command will use whatever name you choose (e.g., `/my-design-deconstruct`).
