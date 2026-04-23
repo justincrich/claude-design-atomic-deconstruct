@@ -19,7 +19,9 @@ This skill works with a **standalone HTML export** — not the "handoff to Claud
 
 Claude Design produces beautiful, high-fidelity HTML — but asking an agent to *reproduce* that design is rough. The standard prompt is thin:
 
-> Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/...?open_file=example.html
+```shell
+Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/...?open_file=example.html
+```
 
 That's not enough context for an implementation agent. There are no tokens, no component boundaries, no variant inventory — just a monolithic HTML file.
 
